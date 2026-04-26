@@ -14,6 +14,7 @@ app.use(
       "http://localhost:3000",
       "https://pet-place-server.vercel.app",
       "https://petplace-client.vercel.app",
+      "https://petplace-client-shanto93-shanta-islams-projects.vercel.app/",
     ],
     credentials: true,
   }),
