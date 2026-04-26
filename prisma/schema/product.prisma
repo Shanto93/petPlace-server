@@ -1,0 +1,94 @@
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  pet         String   @unique
+  description String
+  icon        String
+  color       String
+  bg          String
+  borderColor String
+  shadow      String
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation: A category can have many items
+  items Item[]
+
+  @@map("categories")
+}
+
+model Item {
+  id              String   @id @default(uuid())
+  title           String
+  categoryId      String
+  price           Float
+  description     String
+  fullDescription String
+  images          String[] // Array of strings to store multiple image URLs
+  icon            String
+  color           String
+  bg              String
+  isDeleted       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relation to Category
+  category Category @relation(fields: [categoryId], references: [id])
+
+  // Relations to User activity
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("items")
+}
+
+// =======================
+// CART & ORDER MODELS
+// =======================
+
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String // Maps to AuthenticatedUser
+  itemId    String // Maps to Item
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  user AuthenticatedUser @relation(fields: [userId], references: [id])
+  item Item              @relation(fields: [itemId], references: [id])
+
+  @@map("cart_items")
+}
+
+model Order {
+  id         String      @id @default(uuid())
+  userId     String // Maps to AuthenticatedUser
+  totalPrice Float
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  // Relationships
+  user       AuthenticatedUser @relation(fields: [userId], references: [id])
+  orderItems OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String // Maps to Order
+  itemId    String // Maps to Item
+  quantity  Int
+  price     Float // We store price here so historical orders don't change if the Item price changes later
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  order Order @relation(fields: [orderId], references: [id])
+  item  Item  @relation(fields: [itemId], references: [id])
+
+  @@map("order_items")
+}
