@@ -18,7 +18,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24 * 90, 
+    maxAge: 1000 * 60 * 60 * 24 * 90,
   });
 
   sendResponse(res, {
@@ -26,6 +26,8 @@ const login = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: "User Login Successfully",
     data: {
+      id: result.id, // <--- ADD THIS: NextAuth needs this!
+      accessToken: result.accessToken, // <--- ADD THIS: NextAuth needs this!
       needPasswordChange: result.needPasswordChange,
     },
   });
