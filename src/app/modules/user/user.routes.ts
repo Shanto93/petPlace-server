@@ -25,7 +25,6 @@ router.post(
 
 router.post(
   "/create-admin",
-  auth(UserRole.ADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     // FIX: Using || "{}" to prevent undefined crash
